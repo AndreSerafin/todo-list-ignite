@@ -7,43 +7,40 @@ import {
   TaskDescriptionDone,
   UncheckedButton,
 } from './styles';
-import { useState } from 'react';
+import { Task as TaskType } from '../TasksContainer/TasksContainer';
 
 interface PropsType {
-  id: number;
-  description: string;
-  isDone: boolean;
-  onDelete: (id: number) => void;
+  task: TaskType;
+  onDelete: (task: TaskType) => void;
+  onCheck: (id: number) => void;
 }
 
-export function Task({ id, description, isDone, onDelete }: PropsType) {
-  const [done, setDone] = useState(isDone);
-
-  function changeButtonState() {
-    done ? setDone(false) : setDone(true);
+export function Task({ task, onDelete, onCheck }: PropsType) {
+  function handleDelete() {
+    onDelete(task);
   }
 
-  function handleDelete() {
-    onDelete(id);
+  function handleCheck() {
+    onCheck(task.id);
   }
 
   return (
     <TaskCard>
-      {done ? (
+      {task.done ? (
         <>
-          <CheckedButton onClick={changeButtonState}>
+          <CheckedButton onClick={handleCheck}>
             <Check
               size={12}
               weight="bold"
               style={{ color: 'var(--gray-200)' }}
             />
           </CheckedButton>
-          <TaskDescriptionDone>{description}</TaskDescriptionDone>
+          <TaskDescriptionDone>{task.description}</TaskDescriptionDone>
         </>
       ) : (
         <>
-          <UncheckedButton onClick={changeButtonState} />
-          <TaskDescription>{description}</TaskDescription>
+          <UncheckedButton onClick={handleCheck} />
+          <TaskDescription>{task.description}</TaskDescription>
         </>
       )}
 

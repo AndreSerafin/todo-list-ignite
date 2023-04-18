@@ -15,7 +15,7 @@ import {
 import { Task } from '../Task/Task';
 import { ChangeEvent, FormEvent, useState } from 'react';
 
-interface Task {
+export interface Task {
   id: number;
   description: string;
   done: boolean;
@@ -43,22 +43,20 @@ export function TasksContainer() {
     done: false,
   });
 
-  function renderTasks() {
-    return tasks.map((task) => {
-      return (
-        <Task
-          description={task.description}
-          isDone={task.done}
-          id={task.id}
-          onDelete={handleDeleteTask}
-        />
-      );
-    });
-  }
+  const finishedTasks = tasks.reduce((sum, task) => {
+    if (task.done === true) {
+      return sum + 1;
+    } else {
+      return sum;
+    }
+  }, 0);
 
-  function handleDeleteTask(id: number) {
+  const isNewTaskEmpty = newTask.description.length === 0 ? true : false;
+  const createdTasks = tasks.length;
+
+  function handleDeleteTask(taskToDelete: Task) {
     const tasksWithoutDeletedOne = tasks.filter((task) => {
-      return task.id !== id;
+      return task !== taskToDelete;
     });
 
     setTasks(tasksWithoutDeletedOne);
@@ -80,7 +78,31 @@ export function TasksContainer() {
     setNewTask({ id: tasks.length + 1, description: description, done: false });
   }
 
-  const isNewTaskEmpty = newTask.description.length === 0 ? true : false;
+  function handleFinishTask(id: number) {
+    const updatedTasks = tasks.map((task) =>
+      task.id === id
+        ? {
+            ...task,
+            done: !task.done,
+          }
+        : task
+    );
+
+    setTasks(updatedTasks);
+  }
+
+  function renderTasks() {
+    return tasks.map((task) => {
+      return (
+        <Task
+          key={task.id}
+          task={task}
+          onDelete={handleDeleteTask}
+          onCheck={handleFinishTask}
+        />
+      );
+    });
+  }
 
   return (
     <>
@@ -97,10 +119,14 @@ export function TasksContainer() {
       </NewTaskForm>
       <CountersSession>
         <CounterCreated>
-          Tarefas criadas<CounterSpan>3</CounterSpan>
+          Tarefas criadas<CounterSpan>{createdTasks}</CounterSpan>
         </CounterCreated>
         <CounterDone>
-          Concluídas<CounterSpan>3 de 10</CounterSpan>
+          Concluídas
+          <CounterSpan>
+            {' '}
+            {finishedTasks} de {createdTasks}
+          </CounterSpan>
         </CounterDone>
       </CountersSession>
       <TasksSession>
