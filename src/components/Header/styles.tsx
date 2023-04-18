@@ -11,6 +11,7 @@ export const Header = styled.header`
 export const LogoSession = styled.div`
   display: flex;
   gap: 0.75rem;
+  cursor: pointer;
 `;
 
 export const Title = styled.h1`

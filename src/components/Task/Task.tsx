@@ -1,4 +1,4 @@
-import { Check, Trash, TrashSimple } from 'phosphor-react';
+import { Check, Trash } from 'phosphor-react';
 import {
   CheckedButton,
   DeleteButton,
@@ -13,13 +13,18 @@ interface PropsType {
   id: number;
   description: string;
   isDone: boolean;
+  onDelete: (id: number) => void;
 }
 
-export function Task({ id, description, isDone }: PropsType) {
+export function Task({ id, description, isDone, onDelete }: PropsType) {
   const [done, setDone] = useState(isDone);
 
   function changeButtonState() {
     done ? setDone(false) : setDone(true);
+  }
+
+  function handleDelete() {
+    onDelete(id);
   }
 
   return (
@@ -42,7 +47,7 @@ export function Task({ id, description, isDone }: PropsType) {
         </>
       )}
 
-      <DeleteButton>
+      <DeleteButton onClick={handleDelete}>
         <Trash size={24} />
       </DeleteButton>
     </TaskCard>

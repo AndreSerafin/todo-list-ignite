@@ -13,7 +13,7 @@ import {
   TasksSession,
 } from './styles';
 import { Task } from '../Task/Task';
-import { useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 
 interface Task {
   id: number;
@@ -37,19 +37,61 @@ export function TasksContainer() {
     },
   ]);
 
+  const [newTask, setNewTask] = useState<Task>({
+    id: 0,
+    description: '',
+    done: false,
+  });
+
   function renderTasks() {
     return tasks.map((task) => {
       return (
-        <Task description={task.description} isDone={task.done} id={task.id} />
+        <Task
+          description={task.description}
+          isDone={task.done}
+          id={task.id}
+          onDelete={handleDeleteTask}
+        />
       );
     });
   }
 
+  function handleDeleteTask(id: number) {
+    const tasksWithoutDeletedOne = tasks.filter((task) => {
+      return task.id !== id;
+    });
+
+    setTasks(tasksWithoutDeletedOne);
+  }
+
+  function handleCreateNewTask(event: FormEvent) {
+    event?.preventDefault();
+    setTasks([...tasks, newTask]);
+    setNewTask({
+      id: 0,
+      description: '',
+      done: false,
+    });
+  }
+
+  function handleAddNewTask(event: ChangeEvent<HTMLInputElement>) {
+    const description = event.target.value;
+    event.target.setCustomValidity('');
+    setNewTask({ id: tasks.length + 1, description: description, done: false });
+  }
+
+  const isNewTaskEmpty = newTask.description.length === 0 ? true : false;
+
   return (
     <>
-      <NewTaskForm>
-        <NewTaskInput placeholder="Adicione uma nova tarefa" />
-        <CreateTaskButton>
+      <NewTaskForm onSubmit={handleCreateNewTask}>
+        <NewTaskInput
+          type="text"
+          onChange={handleAddNewTask}
+          placeholder="Adicione uma nova tarefa"
+          value={newTask.description}
+        />
+        <CreateTaskButton type="submit" disabled={isNewTaskEmpty}>
           Criar <PlusCircle size={20} />
         </CreateTaskButton>
       </NewTaskForm>
