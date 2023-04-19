@@ -19,10 +19,11 @@ export const NewTaskInput = styled.input`
   background: var(--gray-500);
   border-radius: 8px;
   border: 1px solid var(--gray-700);
-  transition: 0.2s;
+  transition: 0.4s;
   color: var(--gray-100);
 
   &:focus {
+    border: 1px solid var(--gray-700);
     outline: 1px solid var(--purple);
   }
 
