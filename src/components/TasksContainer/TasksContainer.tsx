@@ -22,20 +22,7 @@ export interface Task {
 }
 
 export function TasksContainer() {
-  const [tasks, setTasks] = useState<Task[]>([
-    {
-      id: 1,
-      description:
-        'Aliqua eu officia culpa laboris Lorem enim sint non amet qui.',
-      done: false,
-    },
-    {
-      id: 2,
-      description:
-        'Occaecat mollit ipsum esse Lorem voluptate fugiat occaecat officia non laboris.',
-      done: false,
-    },
-  ]);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   const [newTask, setNewTask] = useState<Task>({
     id: 0,
